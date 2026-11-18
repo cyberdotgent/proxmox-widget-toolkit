@@ -1093,19 +1093,27 @@ Ext.define('Proxmox.Utils', {
             return window.location.origin + info.link;
         },
 
-        openXtermJsViewer: function (vmtype, vmid, nodename, vmname, cmd) {
-            let url = Ext.Object.toQueryString({
+        // serial: the serial terminal interface of a VM (e.g. serial0), the default if unset
+        openXtermJsViewer: function (vmtype, vmid, nodename, vmname, cmd, serial) {
+            let query = {
                 console: vmtype, // kvm, lxc, upgrade or shell
                 xtermjs: 1,
                 vmid: vmid,
                 vmname: vmname,
                 node: nodename,
                 cmd: cmd,
-            });
+            };
+            if (serial) {
+                query.serial = serial;
+            }
+            let url = Ext.Object.toQueryString(query);
+            // c3270, used for the 3270 console of s390x VMs, needs at least 24 rows and two
+            // more for its status line
+            let height = serial === '3270' ? 520 : 420;
             let nw = window.open(
                 '?' + url,
                 '_blank',
-                'toolbar=no,location=no,status=no,menubar=no,resizable=yes,width=800,height=420',
+                `toolbar=no,location=no,status=no,menubar=no,resizable=yes,width=800,height=${height}`,
             );
             if (nw) {
                 nw.focus();
