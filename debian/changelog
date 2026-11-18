@@ -1,3 +1,11 @@
+proxmox-widget-toolkit (5.2.15+s390x1) trixie; urgency=medium
+
+  * s390x port: xterm.js viewer: allow opening a specific serial terminal of
+    a VM (incl. the SCLP and 3270 consoles of s390x VMs), and size the 3270
+    console window for model 4.
+
+ -- Yvan Janssens <yvanj@cyber.gent>  Wed, 18 Nov 2026 19:03:35 +0100
+
 proxmox-widget-toolkit (5.2.15) trixie; urgency=medium
 
   * add access log view, which lists the requests of the API access log
