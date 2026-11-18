@@ -1107,9 +1107,16 @@ Ext.define('Proxmox.Utils', {
                 query.serial = serial;
             }
             let url = Ext.Object.toQueryString(query);
-            // c3270, used for the 3270 console of s390x VMs, needs at least 24 rows and two
-            // more for its status line
-            let height = serial === '3270' ? 520 : 420;
+            let height = 420;
+            if (serial === '3270') {
+                // c3270, used for the 3270 console of s390x VMs, picks the largest 3270 model
+                // that fits when it starts. Make room for a model 4 screen (43 rows) plus the
+                // status line and menu bar of c3270 (2 rows each), at the default xterm.js row
+                // height (18px for its 15px font) and the 5px padding of the page, but keep
+                // the window on the screen; c3270 falls back to a smaller model then.
+                let rows = 43 + 2 + 2;
+                height = Math.min(rows * 18 + 2 * 5, (window.screen?.availHeight ?? 1080) - 100);
+            }
             let nw = window.open(
                 '?' + url,
                 '_blank',
