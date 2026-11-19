@@ -1,3 +1,11 @@
+proxmox-widget-toolkit (5.2.15+s390x4) trixie; urgency=medium
+
+  * node repositories, node summary: recognise the repository of the s390x
+    port (standard repository 's390x-port' of pve-manager's API on s390x
+    nodes) as a Proxmox VE repository.
+
+ -- Yvan Janssens <yvanj@cyber.gent>  Thu, 19 Nov 2026 14:03:32 +0100
+
 proxmox-widget-toolkit (5.2.15+s390x3) trixie; urgency=medium
 
   * utils: xterm.js viewer: open 3270 consoles in a window sized to their
