@@ -1093,8 +1093,9 @@ Ext.define('Proxmox.Utils', {
             return window.location.origin + info.link;
         },
 
-        // serial: the serial terminal interface of a VM (e.g. serial0), the default if unset
-        openXtermJsViewer: function (vmtype, vmid, nodename, vmname, cmd, serial) {
+        // serial: the serial terminal interface of a VM (e.g. serial0), the default if unset,
+        // model: the 3270 model of a 3270 console or terminal of an s390x VM (2 to 5, default 2)
+        openXtermJsViewer: function (vmtype, vmid, nodename, vmname, cmd, serial, model) {
             let query = {
                 console: vmtype, // kvm, lxc, upgrade or shell
                 xtermjs: 1,
@@ -1106,22 +1107,30 @@ Ext.define('Proxmox.Utils', {
             if (serial) {
                 query.serial = serial;
             }
-            let url = Ext.Object.toQueryString(query);
+            let width = 800;
             let height = 420;
             if (serial === '3270' || /^terminal\d+$/.test(serial ?? '')) {
-                // c3270, used for the 3270 console and terminals of s390x VMs, picks the
-                // largest 3270 model that fits when it starts. Make room for a model 4 screen
-                // (43 rows) plus the status line and menu bar of c3270 (2 rows each), at the
-                // default xterm.js row height (18px for its 15px font) and the 5px padding of
-                // the page, but keep the window on the screen; c3270 falls back to a smaller
-                // model then.
-                let rows = 43 + 2 + 2;
-                height = Math.min(rows * 18 + 2 * 5, (window.screen?.availHeight ?? 1080) - 100);
+                // xterm.js shows the c3270 session of a 3270 console or terminal at its fixed
+                // size: the 3270 screen of its model, the menu bar of c3270 above and its status
+                // line below (3 rows). Estimate the window size for the default xterm.js font
+                // (15px, cells of about 9x18px) and the 5px padding of the page, with some room
+                // to spare; xterm.js fits the window to the terminal once it knows the font. Keep
+                // the window on the screen, xterm.js shows scroll bars then.
+                model = model ?? '2';
+                query.model = model;
+                let [rows, cols] = { 2: [24, 80], 3: [32, 80], 4: [43, 80], 5: [27, 132] }[model];
+                let screen = window.screen;
+                width = Math.min(cols * 9 + 2 * 5 + 20, (screen?.availWidth ?? 1920) - 50);
+                height = Math.min(
+                    (rows + 3) * 18 + 2 * 5 + 20,
+                    (screen?.availHeight ?? 1080) - 100,
+                );
             }
+            let url = Ext.Object.toQueryString(query);
             let nw = window.open(
                 '?' + url,
                 '_blank',
-                `toolbar=no,location=no,status=no,menubar=no,resizable=yes,width=800,height=${height}`,
+                `toolbar=no,location=no,status=no,menubar=no,resizable=yes,width=${width},height=${height}`,
             );
             if (nw) {
                 nw.focus();
