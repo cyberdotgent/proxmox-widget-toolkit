@@ -1,3 +1,10 @@
+proxmox-widget-toolkit (5.2.15+s390x3) trixie; urgency=medium
+
+  * utils: xterm.js viewer: open 3270 consoles in a window sized to their
+    3270 model.
+
+ -- Yvan Janssens <yvanj@cyber.gent>  Thu, 19 Nov 2026 10:15:18 +0100
+
 proxmox-widget-toolkit (5.2.15+s390x2) trixie; urgency=medium
 
   * s390x port: xterm.js viewer: size the window of the 3270 terminals of
