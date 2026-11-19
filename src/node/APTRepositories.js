@@ -473,10 +473,12 @@ Ext.define('Proxmox.node.APTRepositories', {
                 nosubscription: vm.get('cephNoSubscriptionRepo'),
                 test: vm.get('cephTestRepo'),
             };
+            // s390x: the repository of the port (pve-manager, PVE::S390xPort)
+            let portRepo = vm.get('portRepo');
             let wrongSuites = vm.get('suitesWarning');
             let mixedSuites = vm.get('mixedSuites');
 
-            if (!enterprise && !nosubscription && !test) {
+            if (!enterprise && !nosubscription && !test && !portRepo) {
                 addCritical(
                     Ext.String.format(
                         gettext('No {0} repository is enabled, you do not get any updates!'),
@@ -494,6 +496,14 @@ Ext.define('Proxmox.node.APTRepositories', {
                 );
             } else if (nosubscription || test) {
                 addGood(Ext.String.format(gettext('You get updates for {0}'), vm.get('product')));
+            } else if (portRepo) {
+                addGood(
+                    Ext.String.format(
+                        gettext('You get updates for {0} from the repository of the s390x port'),
+                        vm.get('product'),
+                    ),
+                );
+                text = gettext('The repository of the s390x port is configured');
             }
 
             if (wrongSuites) {
@@ -567,6 +577,7 @@ Ext.define('Proxmox.node.APTRepositories', {
             noSubscriptionRepo: '',
             enterpriseRepo: '',
             testRepo: '',
+            portRepo: '',
             cephEnterpriseRepo: '',
             cephNoSubscriptionRepo: '',
             cephTestRepo: '',
@@ -689,6 +700,11 @@ Ext.define('Proxmox.node.APTRepositories', {
                 vm.set('cephNoSubscriptionRepo', status);
             } else if (handle.match(/^ceph-[a-zA-Z]+-test$/)) {
                 vm.set('cephTestRepo', status);
+            } else if (handle === 's390x-port') {
+                // configured by the installer, not added here
+                vm.set('portRepo', status);
+                me.getController().updateState();
+                continue;
             }
             me.getController().updateState();
 

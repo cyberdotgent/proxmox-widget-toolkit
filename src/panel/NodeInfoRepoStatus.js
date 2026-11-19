@@ -17,6 +17,7 @@ Ext.define('Proxmox.widget.NodeInfoRepoStatus', {
             noSubscriptionRepo: '',
             enterpriseRepo: '',
             testRepo: '',
+            portRepo: '', // s390x: the repository of the port (pve-manager, PVE::S390xPort)
         },
 
         formulas: {
@@ -31,6 +32,8 @@ Ext.define('Proxmox.widget.NodeInfoRepoStatus', {
                     return 'ok';
                 } else if (!get('subscriptionActive') && get('enterpriseRepo')) {
                     return 'no-sub';
+                } else if (get('portRepo')) {
+                    return 'port';
                 } else if (
                     !get('enterpriseRepo') ||
                     !get('noSubscriptionRepo') ||
@@ -80,6 +83,8 @@ Ext.define('Proxmox.widget.NodeInfoRepoStatus', {
                 vm.set('noSubscriptionRepo', status);
             } else if (handle === 'test') {
                 vm.set('testRepo', status);
+            } else if (handle === 's390x-port') {
+                vm.set('portRepo', status);
             }
         }
     },

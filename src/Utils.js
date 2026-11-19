@@ -1453,6 +1453,13 @@ Ext.define('Proxmox.Utils', {
                         'exclamation-circle warning',
                     )
                 );
+            } else if (status === 'port') {
+                // s390x: the repository of the port
+                return (
+                    fmt(getUpdates, 'check-circle good') +
+                    ' ' +
+                    fmt(gettext('s390x port repository enabled'), 'info-circle')
+                );
             } else if (status === 'no-repo') {
                 return fmt(noRepo, 'exclamation-circle critical');
             }
