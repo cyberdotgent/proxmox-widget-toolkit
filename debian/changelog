@@ -1,3 +1,9 @@
+proxmox-widget-toolkit (5.2.15+s390x6) trixie; urgency=medium
+
+  * Rebuild with cleaned changelog and test data.
+
+ -- Yvan Janssens <yvanj@cyber.gent>  Fri, 20 Nov 2026 12:55:24 +0100
+
 proxmox-widget-toolkit (5.2.15+s390x5) trixie; urgency=medium
 
   * utils: xterm.js viewer: a 3270 console opened without a model gets the
