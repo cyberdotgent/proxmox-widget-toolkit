@@ -1094,7 +1094,7 @@ Ext.define('Proxmox.Utils', {
         },
 
         // serial: the serial terminal interface of a VM (e.g. serial0), the default if unset,
-        // model: the 3270 model of a 3270 console or terminal of an s390x VM (2 to 5, default 2)
+        // model: the 3270 model of a 3270 console or terminal of an s390x VM (2 to 5, default 4)
         openXtermJsViewer: function (vmtype, vmid, nodename, vmname, cmd, serial, model) {
             let query = {
                 console: vmtype, // kvm, lxc, upgrade or shell
@@ -1116,7 +1116,7 @@ Ext.define('Proxmox.Utils', {
                 // (15px, cells of about 9x18px) and the 5px padding of the page, with some room
                 // to spare; xterm.js fits the window to the terminal once it knows the font. Keep
                 // the window on the screen, xterm.js shows scroll bars then.
-                model = model ?? '2';
+                model = model ?? '4';
                 query.model = model;
                 let [rows, cols] = { 2: [24, 80], 3: [32, 80], 4: [43, 80], 5: [27, 132] }[model];
                 let screen = window.screen;
